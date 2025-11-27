@@ -61,7 +61,7 @@ def location_detail_page() -> rx.Component:
                                 height="300px",
                                 title=LocationState.selected_location["name"]
                             ),
-                            class_name="mb-6 p-4 bg-[#1a1a2e] pixel-border-cyan",
+                            class_name="mb-6 p-4 bg-transparent",  # Changed to bg-transparent
                         ),
                         class_name="w-full md:w-1/2 md:pr-8",
                     ),

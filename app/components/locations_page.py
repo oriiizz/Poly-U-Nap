@@ -1,5 +1,6 @@
 import reflex as rx
 from app.states.location_state import LocationState, Location
+from app.components.sketchfab import sketchfab_model
 
 
 def rating_bar(label: str, rating: rx.Var[float], color: str) -> rx.Component:

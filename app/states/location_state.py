@@ -11,6 +11,7 @@ class Rating(TypedDict):
     quietness: int
     accessibility: int
     vibe_check: int
+    danger: int
 
 
 class Location(TypedDict):
@@ -35,7 +36,7 @@ class LocationState(rx.State):
             "name": "Student Union Sofa",
             "description": "A surprisingly comfy sofa near the perpetually-broken vending machine. High traffic, but a strategic nap spot.",
             "icon": "couch",
-            "model_id": "b26a267e5a2a4779a0c55814ded990e9",
+            "model_id": "54ffbfc1e493462e800e8a5935f1ca90",
         },
         {
             "id": "quad-tree",
@@ -59,6 +60,7 @@ class LocationState(rx.State):
         "quietness": 3,
         "accessibility": 3,
         "vibe_check": 3,
+        "danger": 3,
     }
 
     @rx.event
@@ -97,6 +99,7 @@ class LocationState(rx.State):
                 "quietness": 3,
                 "accessibility": 3,
                 "vibe_check": 3,
+                "danger": 3,
             }
             yield rx.toast(
                 "Rating submitted! Thanks for your contribution to the nap archives.",
@@ -154,6 +157,7 @@ class LocationState(rx.State):
                     "quietness": 0,
                     "accessibility": 0,
                     "vibe_check": 0,
+                    "danger": 0,
                     "overall": 0,
                 }
                 continue
@@ -165,14 +169,16 @@ class LocationState(rx.State):
                 [r["accessibility"] for r in rating_list]
             )
             vibe_avg = self._calculate_average([r["vibe_check"] for r in rating_list])
+            danger_avg = self._calculate_average([r["danger"] for r in rating_list])
             overall = self._calculate_average(
-                [comfort_avg, quietness_avg, accessibility_avg, vibe_avg]
+                [comfort_avg, quietness_avg, accessibility_avg, vibe_avg, danger_avg]
             )
             avg_ratings[loc_id] = {
                 "comfort": round(comfort_avg, 1),
                 "quietness": round(quietness_avg, 1),
                 "accessibility": round(accessibility_avg, 1),
                 "vibe_check": round(vibe_avg, 1),
+                "danger": round(danger_avg, 1),
                 "overall": round(overall, 1),
             }
         return avg_ratings

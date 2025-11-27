@@ -23,7 +23,7 @@ def sketchfab_model(model_id: str, height: str = "360px", title: Optional[str] =
                     allow="autoplay; fullscreen; xr-spatial-tracking"
                     allowfullscreen
                     loading="lazy"
-                    style="position:absolute; top:0; left:0; width:100%; height:100%;">
+                    style="position:absolute; top:0; left:0; width:100%; height:100%; background: transparent; border: none;">
                   </iframe>
                 </div>
                 """
