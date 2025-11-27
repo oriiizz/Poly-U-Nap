@@ -39,221 +39,211 @@ class QuizState(rx.State):
     quiz_finished: bool = False
     # The list now contains only 6 questions, all with 4 choices, mixing old and new.
     questions: list[Question] = [
-        # NEW Q1 (The Bedside Creed) - Part I
         {
-            "id": "nq1",
-            "part": "PART I: The Bedside Creed",
-            "text": "When you spot a bed, what’s your instinct?",
+            "id": "q1",
+            "part": "The Nap Environment",
+            "text": "What level of noise is perfect for your nap?",
             "layout": "grid",
             "choices": {
                 "A": {
-                    "title": "The Iron Spine (Hard as justice, firm as fate)",
-                    "emoji": "🪵",
-                    "points": {"C": 2}, # C – Comfort (Sturdy support)
+                    "title": "Silent as a tomb (Noise is the enemy)",
+                    "emoji": "🤫",
+                    "points": {"R": 2},
                 },
                 "B": {
-                    "title": "The Cloud Whisperer (Soft, cozy, infinite fluff)",
-                    "emoji": "☁️",
-                    "points": {"C": 3}, # C – Comfort (Total plush nirvana)
+                    "title": "A low, constant hum (Background chatter is calming)",
+                    "emoji": "☕",
+                    "points": {"S": 2},
                 },
                 "C": {
-                    "title": "The Ritualist (Your altar, your temple, your sacred zone)",
-                    "emoji": "🕯️",
-                    "points": {"R": 3}, # R – Ritual
+                    "title": "Anything goes (I can tune out a marching band)",
+                    "emoji": "🎧",
+                    "points": {"A": 2},
                 },
                 "D": {
-                    "title": "The Battle Sleeper (Sleep is WAR, thrive in hostile conditions)",
-                    "emoji": "⚔️",
-                    "points": {"S": 2}, # S – Stimulation
-                },
-            },
-        },
-        # NEW Q2 (The Bedside Creed) - Part I
-        {
-            "id": "nq2",
-            "part": "PART I: The Bedside Creed",
-            "text": "What makes a *perfect nap*?",
-            "layout": "grid",
-            "choices": {
-                "A": {
-                    "title": "Thrill of the Spot (Nap where you *shouldn’t*)",
-                    "emoji": "⚡",
-                    "points": {"S": 3}, # S – Stimulation
-                },
-                "B": {
-                    "title": "Sweet Serenity (Soft, quiet, kind environment)",
-                    "emoji": "🌸",
-                    "points": {"C": 2}, # C – Comfort
-                },
-                "C": {
-                    "title": "The Ceremony (Candles, music, the same blanket every time)",
-                    "emoji": "🔮",
-                    "points": {"R": 3}, # R – Ritual
-                },
-                "D": {
-                    "title": "Driftwood Soul (Any time, any place, any floor)",
+                    "title": "Quiet, but I prefer natural white noise (Rain, fan)",
                     "emoji": "🍃",
-                    "points": {"A": 3}, # A – Adaptability
+                    "points": {"C": 1, "R": 1},
                 },
             },
         },
-        # OLD Q2 (Updated to 4 choices and new score logic)
         {
             "id": "q2",
-            "part": "Part 1: The Spark",
-            "text": "Your ideal napping light level?",
+            "part": "The Nap Environment",
+            "text": "How do you feel about napping in public view?",
             "layout": "grid",
             "choices": {
                 "A": {
-                    "title": "Pitch Black Void",
-                    "emoji": "🌑",
-                    "points": {"C": 2}, # Preference for darkness suggests comfort/control
+                    "title": "Anxiety-inducing. I need total privacy.",
+                    "emoji": "🥷",
+                    "points": {"C": 2},
                 },
                 "B": {
-                    "title": "A Little Ambient Light (Curtains drawn)",
-                    "emoji": "🌤️",
-                    "points": {"C": 1}, # Neutral/Medium comfort
-                },
-                "C": {
-                    "title": "Direct, Blazing Sunlight (Window seat)",
-                    "emoji": "☀️",
-                    "points": {"A": 2}, # Adaptable, can sleep anywhere
-                },
-                "D": {
-                    "title": "Dim, non-disruptive, specific light (e.g. nightlight)",
-                    "emoji": "🕯️",
-                    "points": {"R": 2}, # Ritual/Preference
-                },
-            },
-        },
-        # NEW Q4 (Field Test Simulation) - Part II
-        {
-            "id": "nq4",
-            "part": "PART II: Field Test Simulation",
-            "text": "A new nap spot appears on your map. Your move?",
-            "layout": "grid",
-            "choices": {
-                "A": {
-                    "title": "Hardcore Challenge (The harder the surface, the greater the glory)",
-                    "emoji": "🧗",
-                    "points": {"S": 2}, # S – Stimulation/Challenge
-                },
-                "B": {
-                    "title": "Cozy Den (If it’s soft and quiet, it’s already home)",
-                    "emoji": "🪶",
-                    "points": {"C": 3}, # C – Comfort
-                },
-                "C": {
-                    "title": "Hidden Nook (Secret corners call to your inner stealth napper)",
-                    "emoji": "🕳️",
-                    "points": {"S": 1, "R": 1}, # Stealth/Ritual of hiding
-                },
-                "D": {
-                    "title": "Public Legend (Napping proudly in plain sight)",
-                    "emoji": "🌆",
-                    "points": {"A": 2}, # A – Adaptability/Public
-                },
-            },
-        },
-        # NEW Q5 (Deep Nap Philosophy) - Part III
-        {
-            "id": "nq5",
-            "part": "PART III: Deep Nap Philosophy",
-            "text": "Your nap soundtrack of choice?",
-            "layout": "grid",
-            "choices": {
-                "A": {
-                    "title": "Chaos Ambience (Arguing neighbors, street sounds)",
-                    "emoji": "🔊",
-                    "points": {"S": 3}, # S – Stimulation
-                },
-                "B": {
-                    "title": "Sleep Sanctuary (Total silence or a soft lullaby)",
-                    "emoji": "🎧",
-                    "points": {"C": 2}, # C – Comfort
-                },
-                "C": {
-                    "title": "Ritual Noise (White noise machine, specific playlist)",
-                    "emoji": "🎛️",
-                    "points": {"R": 2}, # R – Ritual
-                },
-                "D": {
-                    "title": "Freestyler (Can nap through anything, from construction to karaoke)",
-                    "emoji": "🌀",
-                    "points": {"A": 3}, # A – Adaptability
-                },
-            },
-        },
-        # OLD Q10 (Updated to 4 choices and new score logic)
-        {
-            "id": "q10",
-            "part": "Part 4: The Chameleon",
-            "text": "Napping in public?",
-            "layout": "grid",
-            "choices": {
-                "A": {
-                    "title": "A big no from me (Need absolute privacy)",
-                    "emoji": "🙅",
-                    "points": {"C": 1}, # C – Comfort/Security
-                },
-                "B": {
-                    "title": "Anywhere is a good spot (Embrace the chaos)",
+                    "title": "Slightly thrilling. The risk is part of the fun.",
                     "emoji": "😎",
-                    "points": {"A": 2}, # A – Adaptability
+                    "points": {"S": 2},
                 },
                 "C": {
-                    "title": "Only if I am desperate (A last resort)",
-                    "emoji": "😥",
-                    "points": {"R": 1, "C": 1}, # R – Breaks the ritual/C - Reluctantly
+                    "title": "It's fine, as long as I'm in a designated spot.",
+                    "emoji": "📜",
+                    "points": {"R": 2},
                 },
                 "D": {
-                    "title": "A quiet, public place is ideal (Like a library nook)",
-                    "emoji": "🤫",
-                    "points": {"S": 1, "R": 1}, # Blends S (public) and R (quiet) - LHP lean
+                    "title": "Don't care. I'll nap right in the middle of a crowd.",
+                    "emoji": "🏙️",
+                    "points": {"A": 2},
                 },
             },
         },
-        # NOTE: Original questions 1, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, and new questions nq3, nq6, nq7, nq8 are excluded
-        # to meet the maximum question count of 6.
+        {
+            "id": "q3",
+            "part": "The Nap Surface",
+            "text": "Your ideal nap surface is...",
+            "layout": "grid",
+            "choices": {
+                "A": {
+                    "title": "A plush cloud I can sink into (Ultimate softness)",
+                    "emoji": "☁️",
+                    "points": {"C": 2},
+                },
+                "B": {
+                    "title": "Firm and supportive (Good for posture, not too squishy)",
+                    "emoji": "🪵",
+                    "points": {"R": 1, "A": 1},
+                },
+                "C": {
+                    "title": "Whatever's closest (Back of a chair, desk, floor, etc.)",
+                    "emoji": "🪨",
+                    "points": {"A": 2},
+                },
+                "D": {
+                    "title": "A high vantage point (I like to survey my kingdom)",
+                    "emoji": "🏰",
+                    "points": {"S": 2},
+                },
+            },
+        },
+        {
+            "id": "q4",
+            "part": "The Nap Surface",
+            "text": "How much 'gear' do you bring to a nap?",
+            "choices": {
+                "A": {
+                    "title": "Everything: Mask, pillow, special blanket, earplugs.",
+                    "emoji": "🎒",
+                    "points": {"C": 1, "R": 2},
+                },
+                "B": {
+                    "title": "Maybe a hoodie/bag for a makeshift pillow.",
+                    "emoji": "🧣",
+                    "points": {"S": 2},
+                },
+                "C": {
+                    "title": "Nothing. I use what's available.",
+                    "emoji": "🤷",
+                    "points": {"A": 2},
+                },
+                "D": {
+                    "title": "Just headphones (Music is my blanket)",
+                    "emoji": "🎧",
+                    "points": {"C": 1, "S": 1},
+                },
+            },
+        },
+        {
+            "id": "q5",
+            "part": "The Nap Schedule",
+            "text": "A good nap happens when...",
+            "choices": {
+                "A": {
+                    "title": "It's exactly 2:00 PM (Precision timing is key).",
+                    "emoji": "⏰",
+                    "points": {"R": 2},
+                },
+                "B": {
+                    "title": "I'm suddenly tired and have an unexpected opportunity.",
+                    "emoji": "⚡",
+                    "points": {"S": 2, "A": 1},
+                },
+                "C": {
+                    "title": "I've carved out a comfortable block of at least 60-90 minutes.",
+                    "emoji": "🛌",
+                    "points": {"C": 2},
+                },
+                "D": {
+                    "title": "Whenever I blink for too long (Accidental nap)",
+                    "emoji": "😑",
+                    "points": {"A": 2},
+                },
+            },
+        },
+        {
+            "id": "q6",
+            "part": "The Nap Schedule",
+            "text": "If your favorite spot is taken, you...",
+            "layout": "grid",
+            "choices": {
+                "A": {
+                    "title": "Get mad and refuse to nap until tomorrow (Only the best will do).",
+                    "emoji": "😠",
+                    "points": {"R": 2},
+                },
+                "B": {
+                    "title": "Explore until I find a new, novel, or fun place to try.",
+                    "emoji": "🗺️",
+                    "points": {"A": 2, "S": 1},
+                },
+                "C": {
+                    "title": "Find the *next* most comfortable place immediately.",
+                    "emoji": "🛋️",
+                    "points": {"C": 2},
+                },
+                "D": {
+                    "title": "Ask if they want to share (Nap party)",
+                    "emoji": "👯",
+                    "points": {"S": 2},
+                },
+            },
+        },
     ]
     answer_stats: dict[str, dict[str, int]] = {
-        "nq1": {"A": 20, "B": 50, "C": 10, "D": 20},
-        "nq2": {"A": 15, "B": 40, "C": 30, "D": 15},
-        "q2": {"A": 40, "B": 60, "C": 0, "D": 0},
-        "nq4": {"A": 10, "B": 50, "C": 20, "D": 20},
-        "nq5": {"A": 10, "B": 40, "C": 30, "D": 20},
-        "q10": {"A": 15, "B": 85, "C": 0, "D": 0},
+        "q1": {"A": 25, "B": 25, "C": 25, "D": 25},
+        "q2": {"A": 25, "B": 25, "C": 25, "D": 25},
+        "q3": {"A": 25, "B": 25, "C": 25, "D": 25},
+        "q4": {"A": 25, "B": 25, "C": 25, "D": 25},
+        "q5": {"A": 25, "B": 25, "C": 25, "D": 25},
+        "q6": {"A": 25, "B": 25, "C": 25, "D": 25},
     }
     personalities: dict[str, Personality] = {
-        "LDP": {
-            "title": "Lecture Hall Phantom (LDP)",
-            "description": "Thrives on tension and danger. You nap at the edge of chaos. Your ability to nap is triggered by stimulation, not the lack of it.",
-            "icon": "⚡",  # Using emoji instead of 'ghost' to match the new scoring system's icons
-            "spots": ["union-sofa", "library-alcove"],
+        "S": {
+            "title": "The Thrill Napper",
+            "description": "You thrive on the buzz of activity. A low hum of noise, people moving, and the slight risk of being noticed actually helps you drift off. **Your nap is a covert mission.**",
+            "icon": "ghost",
+            "spots": ["union-sofa", "quad-tree"],
         },
-        "CDM": {
-            "title": "Couch Daydreamer (CDM)",
-            "description": "Comfort is law. You rest like royalty, anywhere soft. You are a connoisseur of cushions, a baron of blankets, and a master of the plush arts.",
-            "icon": "☁️",
-            "spots": ["union-sofa", "basement-lounge"],
+        "C": {
+            "title": "The Comfort Connoisseur",
+            "description": "Your non-negotiable is comfort. You need plush surfaces, darkness, and a controlled temperature. You seek an immersive, private cocoon for your deepest rest.",
+            "icon": "couch",
+            "spots": ["basement-lounge", "library-alcove"],
         },
-        "PNP": {
-            "title": "Precision Napper (PNP)",
-            "description": "Every nap is a sacred rite, optimized to perfection. You have a designated time, a perfect spot, and a full pre-sleep checklist.",
-            "icon": "🕯️",
+        "R": {
+            "title": "The Precision Planner",
+            "description": "Napping is a dedicated, controlled ritual. You need a designated, quiet space with minimal interruption to maximize efficiency. **Order equals rest.**",
+            "icon": "alarm-clock-check",
             "spots": ["library-alcove", "basement-lounge"],
         },
-        "WSD": {
-            "title": "Wandering Sleep Deity (WSD)",
-            "description": "Can nap on clouds, cliffs, or chaos. The world is your bed. Your adaptability is legendary.",
-            "icon": "🍃", # Using emoji instead of 'earth' to match the new scoring system's icons
+        "A": {
+            "title": "The Spontaneous Drifter",
+            "description": "You are a master of napping anywhere, anytime. Conditions don't matter; convenience and opportunity do. The world is your bed.",
+            "icon": "earth",
             "spots": ["quad-tree", "union-sofa"],
         },
-        "LHP": {
-            "title": "Library Slacker (LHP)",
-            "description": "A rare hybrid forged from equal parts Stimulation (S) and Ritual (R). You thrive in peaceful, public realms where stealth and ceremony intertwine.",
+        "SR": {
+            "title": "The Stealth Scholar",
+            "description": "A rare blend of routine and risk. You want a quiet, controlled setting but crave the mild stimulation of a public, studious environment.",
             "icon": "book-user",
-            "spots": ["library-alcove", "quad-tree"],
+            "spots": ["library-alcove", "union-sofa"],
         },
         "Default": {
             "title": "Calculating Persona...",
@@ -326,33 +316,26 @@ class QuizState(rx.State):
     def personality_type(self) -> str:
         if not self.quiz_finished:
             return "Default"
-
-        # Find the highest score(s)
-        max_score = max(self.scores.values())
-        dominant_traits = [trait for trait, score in self.scores.items() if score == max_score]
-
-        # Check for the specific S/R hybrid (LHP)
-        if len(dominant_traits) == 2 and "S" in dominant_traits and "R" in dominant_traits and max_score > 0:
-            # Check if S and R are strictly greater than or equal to C and A
-            is_lhp = True
-            for trait in ["C", "A"]:
-                 if self.scores.get(trait, 0) > max_score:
-                      is_lhp = False
-                      break
-            if is_lhp:
-                return "LHP"
-
-        # If it's a single dominant trait or another tie, default to the one in the table order (S, C, R, A)
-        if "S" in dominant_traits:
-            return "LDP"
-        elif "C" in dominant_traits:
-            return "CDM"
-        elif "R" in dominant_traits:
-            return "PNP"
-        elif "A" in dominant_traits:
-            return "WSD"
+            
+        # Get dominant trait
+        dominant_trait = max(self.scores, key=self.scores.get)
+        dominant_score = self.scores[dominant_trait]
         
-        return "Default"
+        # Check for a strong tie with another top score
+        second_highest_score = 0
+        second_dominant_trait = ""
+        for trait, score in self.scores.items():
+            if score > second_highest_score and trait != dominant_trait:
+                second_highest_score = score
+                second_dominant_trait = trait
+
+        # Custom Hybrid Logic: Stealth Scholar (SR) if S and R are tied for highest
+        if dominant_score > 0 and dominant_score == second_highest_score:
+            if {dominant_trait, second_dominant_trait} == {"S", "R"}:
+                return "SR"
+            
+        # Return the single dominant trait key
+        return dominant_trait
 
     @rx.var
     def personality_details(self) -> Personality:
