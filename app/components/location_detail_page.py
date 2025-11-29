@@ -263,18 +263,14 @@ def location_detail_page() -> rx.Component:
                         rx.cond(
                             LocationState.checked_in_locations.contains(LocationState.selected_location["id"]),
                             rx.el.div(
-                                rx.icon("check-circle", size=48, class_name="text-[#00ff9f] mb-3"),
+                                rx.icon("circle-check", size=48, class_name="text-[#00ff9f] mb-3"),
                                 rx.text("ALREADY CHECKED IN", class_name="text-sm text-[#00ff9f] font-bold tracking-wider"),
                                 rx.text("You've visited this location!", class_name="text-xs text-gray-400 mt-2"),
                                 class_name="flex flex-col items-center justify-center p-6"
                             ),
                             rx.el.div(
                                 rx.el.div(
-                                    rx.text("Scan QR code at location", class_name="text-xs text-gray-400 mb-3 text-center"),
-                                    rx.el.img(
-                                        src=LocationState.selected_location_qr_code,
-                                        class_name="w-40 h-40 mx-auto mb-4 border-2 border-[#bd00ff]",
-                                    ),
+                                    rx.text("Visit this location and check in to earn XP!", class_name="text-xs text-gray-400 mb-4 text-center"),
                                     class_name="flex flex-col items-center"
                                 ),
                                 rx.el.button(

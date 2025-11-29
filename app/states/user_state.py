@@ -65,11 +65,43 @@ class UserState(rx.State):
             "title": "Secret Boss Defeated",
             "description": "Discover the hidden nap spot. You found the easter egg.",
             "icon": "ghost",
-        }
+        },
+        "library-legend": {
+            "id": "library-legend",
+            "title": "Library Legend",
+            "description": "Check in at all library locations (G floor study room, bookshelf corridor, and sofa).",
+            "icon": "book-open",
+        },
+        "outdoor-enthusiast": {
+            "id": "outdoor-enthusiast",
+            "title": "Outdoor Enthusiast",
+            "description": "Check in at all outdoor seating areas (wooden, dining, and stone chairs).",
+            "icon": "sun",
+        },
+        "jcit-master": {
+            "id": "jcit-master",
+            "title": "JCIT Master",
+            "description": "Check in at all JCIT locations (Milk Tea Shop, Stairwell, Study Room areas).",
+            "icon": "building",
+        },
+        "comfort-seeker": {
+            "id": "comfort-seeker",
+            "title": "Comfort Seeker",
+            "description": "Check in at all LEGENDARY rarity locations.",
+            "icon": "sofa",
+        },
+        "speed-napper": {
+            "id": "speed-napper",
+            "title": "Speed Napper",
+            "description": "Complete a quiz in under 2 minutes.",
+            "icon": "zap",
+        },
     }
     unlocked_achievements: set[str] = set()
     gamertag: str = ""
-    xp: int = 120  # Mock data for demo
+    xp: int = 0
+    titles: list[str] = ["Sleepy Newbie"]  # Unlocked titles
+    current_title: str = "Sleepy Newbie"  # Currently equipped title
 
     @rx.var
     def level(self) -> int:
@@ -82,6 +114,58 @@ class UserState(rx.State):
     @rx.var
     def xp_progress(self) -> int:
         return int(((self.xp % 500) / 500) * 100)
+    
+    @rx.var
+    def level_title(self) -> str:
+        """Return title based on current level"""
+        if self.level >= 20:
+            return "NAP DEITY"
+        elif self.level >= 15:
+            return "SLEEP LEGEND"
+        elif self.level >= 10:
+            return "DREAM MASTER"
+        elif self.level >= 7:
+            return "REST WARRIOR"
+        elif self.level >= 5:
+            return "DOZE EXPERT"
+        elif self.level >= 3:
+            return "SNOOZE SCOUT"
+        else:
+            return "SLEEPY NEWBIE"
+
+    @rx.event
+    async def add_xp(self, amount: int, reason: str = ""):
+        """Add XP and check for level up"""
+        old_level = self.level
+        self.xp += amount
+        new_level = self.level
+        
+        # Show XP gain notification
+        if reason:
+            yield rx.toast.info(
+                f"+{amount} XP - {reason}",
+                duration=3000,
+                position="bottom-right"
+            )
+        
+        # Check if leveled up
+        if new_level > old_level:
+            yield self.level_up_notification(new_level)
+    
+    @rx.event
+    def level_up_notification(self, new_level: int):
+        """Show special level up notification"""
+        title = self.level_title
+        
+        # Unlock new title
+        if title not in self.titles:
+            self.titles.append(title)
+        
+        return rx.toast.success(
+            f"🎉 LEVEL UP! 🎉\nYou are now Level {new_level}: {title}\n+50 BONUS XP!",
+            duration=5000,
+            position="top-center"
+        )
 
     @rx.event
     def set_gamertag(self, gamertag: str):
@@ -111,17 +195,28 @@ class UserState(rx.State):
     ]
 
     @rx.event
-    def unlock_achievement(self, achievement_id: str):
+    async def unlock_achievement(self, achievement_id: str):
         if achievement_id not in self.unlocked_achievements:
             self.unlocked_achievements.add(achievement_id)
             achievement = self.achievements[achievement_id]
-            return rx.toast(
+            
+            # Give XP for achievement
+            old_level = self.level
+            self.xp += 200
+            new_level = self.level
+            
+            # Check for level up
+            if new_level > old_level:
+                yield self.level_up_notification(new_level)
+            
+            yield rx.toast.warning(
                 rx.el.div(
                     rx.icon(achievement["icon"], class_name="mr-2"),
-                    f"Achievement Unlocked: {achievement['title']}",
+                    f"🏆 Achievement Unlocked: {achievement['title']} (+200 XP)",
                     class_name="flex items-center",
                 ),
                 duration=5000,
+                position="top-center"
             )
 
     @rx.var

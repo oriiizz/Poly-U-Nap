@@ -29,7 +29,7 @@ class Personality(TypedDict):
 
 class QuizState(rx.State):
     current_page: Literal[
-        "home", "quiz", "results", "locations", "location_detail", "profile", "achievements"
+        "home", "quiz", "results", "locations", "location_detail", "profile", "achievements", "visited_locations"
     ] = "home"
     mobile_menu_open: bool = False
     current_question_index: int = 0
@@ -257,7 +257,7 @@ class QuizState(rx.State):
     def set_page(self, page_name: str):
         self.current_page = cast(
             Literal[
-                "home", "quiz", "results", "locations", "location_detail", "profile"
+                "home", "quiz", "results", "locations", "location_detail", "profile", "achievements", "visited_locations"
             ],
             page_name,
         )
@@ -267,6 +267,9 @@ class QuizState(rx.State):
 
     @rx.event
     async def handle_answer(self, question_index: int, answer: str):
+        from app.states.user_state import UserState
+        from app.states.location_state import LocationState
+        
         self.answers.append(answer)
         question = self.questions[question_index]
         points_to_add = question["choices"][answer]["points"]
@@ -278,8 +281,23 @@ class QuizState(rx.State):
             self.quiz_finished = True
             user_state = await self.get_state(UserState)
             location_state = await self.get_state(LocationState)
-            # This logic will need to be adjusted based on the final UserState/LocationState implementation
-            # For now, it's left as is.
+            
+            # Award XP for completing quiz
+            old_level = user_state.level
+            user_state.xp += 250
+            new_level = user_state.level
+            
+            # Check for level up
+            if new_level > old_level:
+                yield user_state.level_up_notification(new_level)
+            
+            yield rx.toast.success(
+                "🎉 Quiz Complete! +250 XP",
+                duration=3000,
+                position="bottom-right"
+            )
+            
+            # Check for nap legend achievement
             rated_all = len(location_state.ratings) == len(location_state.locations)
             if rated_all:
                 yield user_state.unlock_achievement("nap-legend")

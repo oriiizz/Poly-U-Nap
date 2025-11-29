@@ -141,15 +141,55 @@ class LocationState(rx.State):
             location = next((loc for loc in self.locations if loc["id"] == location_id), None)
             
             if location:
-                yield rx.toast(f"CHECKED IN: {location['name']}", duration=3000)
+                # XP based on rarity
+                xp_gain = {
+                    "LEGENDARY": 150,
+                    "EPIC": 100,
+                    "RARE": 75,
+                    "UNCOMMON": 50,
+                }.get(location["rarity"], 50)
+                
+                # Add XP directly
+                old_level = user_state.level
+                user_state.xp += xp_gain
+                new_level = user_state.level
+                
+                # Check for level up
+                if new_level > old_level:
+                    yield user_state.level_up_notification(new_level)
+                
+                yield rx.toast.success(
+                    f"✅ CHECK-IN COMPLETE\n{location['name']}\n+{xp_gain} XP",
+                    duration=4000,
+                    position="bottom-right"
+                )
                 
                 if location["is_secret"]:
                     yield user_state.unlock_achievement("secret-spot-explorer")
                     yield user_state.unlock_achievement("secret-boss-defeated")
                 
-                # XP Gain
-                user_state.xp += 100
-                yield rx.toast("+100 XP", duration=2000)
+                # Check for location collection achievements
+                checked_in_list = list(self.checked_in_locations)
+                
+                # Library Legend - all library locations
+                library_locs = ["cdm-sofa-paradise", "ldp-lecture-phantom", "cdm-ergonomic-island"]
+                if all(loc in checked_in_list for loc in library_locs):
+                    yield user_state.unlock_achievement("library-legend")
+                
+                # Outdoor Enthusiast - all outdoor locations
+                outdoor_locs = ["pms-urban-sleeper", "pms-umbrella-universe", "pms-stone-zen"]
+                if all(loc in checked_in_list for loc in outdoor_locs):
+                    yield user_state.unlock_achievement("outdoor-enthusiast")
+                
+                # JCIT Master - all JCIT locations
+                jcit_locs = ["pnp-milk-tea-dreams", "ldp-stealth-stairs", "cdm-curtain-instance", "cdm-modular-dreams"]
+                if all(loc in checked_in_list for loc in jcit_locs):
+                    yield user_state.unlock_achievement("jcit-master")
+                
+                # Comfort Seeker - all LEGENDARY locations
+                legendary_locs = [loc["id"] for loc in self.locations if loc["rarity"] == "LEGENDARY"]
+                if all(loc in checked_in_list for loc in legendary_locs):
+                    yield user_state.unlock_achievement("comfort-seeker")
 
     @rx.var
     def missions_count(self) -> int:
@@ -197,28 +237,177 @@ class LocationState(rx.State):
 
             if self.selected_location_id not in self.ratings:
                 self.ratings[self.selected_location_id] = []
-            self.ratings[self.selected_location_id].append(self.new_rating.copy())
+            
             user_state = await self.get_state(UserState)
+            
+            # First time rating this location bonus
+            is_first_rating = len(self.ratings[self.selected_location_id]) == 0
+            
+            self.ratings[self.selected_location_id].append(self.new_rating.copy())
+            
+            # Calculate XP based on rating
+            avg = sum(self.new_rating.values()) / len(self.new_rating)
+            stars = int(avg)
+            
+            # Base XP for rating
+            base_xp = 30
+            # Bonus for first rating
+            first_rating_bonus = 70 if is_first_rating else 0
+            # Bonus for thoroughness (max ratings)
+            thoroughness_bonus = 20 if all(v == 5 for v in self.new_rating.values()) else 0
+            
+            total_xp = base_xp + first_rating_bonus + thoroughness_bonus
+            
+            location_name = next(
+                (loc["name"] for loc in self.locations if loc["id"] == self.selected_location_id),
+                "Location"
+            )
+            
+            # Add XP directly
+            old_level = user_state.level
+            user_state.xp += total_xp
+            new_level = user_state.level
+            
+            # Check for level up
+            if new_level > old_level:
+                yield user_state.level_up_notification(new_level)
+            
+            # Achievement checks
             if all((v == 5 for v in self.new_rating.values())):
-                yield user_state.unlock_achievement("5-star-sleeper")
+                old_level_check = user_state.level
+                user_state.xp += 200
+                if user_state.level > old_level_check:
+                    yield user_state.level_up_notification(user_state.level)
+                if "5-star-sleeper" not in user_state.unlocked_achievements:
+                    user_state.unlocked_achievements.add("5-star-sleeper")
+                    achievement = user_state.achievements["5-star-sleeper"]
+                    yield rx.toast.warning(
+                        rx.el.div(
+                            rx.icon(achievement["icon"], class_name="mr-2"),
+                            f"🏆 Achievement Unlocked: {achievement['title']} (+200 XP)",
+                            class_name="flex items-center",
+                        ),
+                        duration=5000,
+                        position="top-center"
+                    )
             
             # New Achievements Logic
             if self.new_rating["danger"] == 5:
-                yield user_state.unlock_achievement("living-on-the-edge")
+                if "living-on-the-edge" not in user_state.unlocked_achievements:
+                    old_level_check = user_state.level
+                    user_state.xp += 200
+                    if user_state.level > old_level_check:
+                        yield user_state.level_up_notification(user_state.level)
+                    user_state.unlocked_achievements.add("living-on-the-edge")
+                    achievement = user_state.achievements["living-on-the-edge"]
+                    yield rx.toast.warning(
+                        rx.el.div(
+                            rx.icon(achievement["icon"], class_name="mr-2"),
+                            f"🏆 Achievement Unlocked: {achievement['title']} (+200 XP)",
+                            class_name="flex items-center",
+                        ),
+                        duration=5000,
+                        position="top-center"
+                    )
             
             if self.new_rating["quietness"] == 5:
-                yield user_state.unlock_achievement("zen-master")
+                if "zen-master" not in user_state.unlocked_achievements:
+                    old_level_check = user_state.level
+                    user_state.xp += 200
+                    if user_state.level > old_level_check:
+                        yield user_state.level_up_notification(user_state.level)
+                    user_state.unlocked_achievements.add("zen-master")
+                    achievement = user_state.achievements["zen-master"]
+                    yield rx.toast.warning(
+                        rx.el.div(
+                            rx.icon(achievement["icon"], class_name="mr-2"),
+                            f"🏆 Achievement Unlocked: {achievement['title']} (+200 XP)",
+                            class_name="flex items-center",
+                        ),
+                        duration=5000,
+                        position="top-center"
+                    )
             
             if self.new_rating["quietness"] == 1 and self.new_rating["vibe_check"] == 5:
-                yield user_state.unlock_achievement("social-sleeper")
+                if "social-sleeper" not in user_state.unlocked_achievements:
+                    old_level_check = user_state.level
+                    user_state.xp += 200
+                    if user_state.level > old_level_check:
+                        yield user_state.level_up_notification(user_state.level)
+                    user_state.unlocked_achievements.add("social-sleeper")
+                    achievement = user_state.achievements["social-sleeper"]
+                    yield rx.toast.warning(
+                        rx.el.div(
+                            rx.icon(achievement["icon"], class_name="mr-2"),
+                            f"🏆 Achievement Unlocked: {achievement['title']} (+200 XP)",
+                            class_name="flex items-center",
+                        ),
+                        duration=5000,
+                        position="top-center"
+                    )
 
             if len(self.ratings) >= 3:
-                yield user_state.unlock_achievement("secret-spot-explorer")
+                if "secret-spot-explorer" not in user_state.unlocked_achievements:
+                    old_level_check = user_state.level
+                    user_state.xp += 200
+                    if user_state.level > old_level_check:
+                        yield user_state.level_up_notification(user_state.level)
+                    user_state.unlocked_achievements.add("secret-spot-explorer")
+                    achievement = user_state.achievements["secret-spot-explorer"]
+                    yield rx.toast.warning(
+                        rx.el.div(
+                            rx.icon(achievement["icon"], class_name="mr-2"),
+                            f"🏆 Achievement Unlocked: {achievement['title']} (+200 XP)",
+                            class_name="flex items-center",
+                        ),
+                        duration=5000,
+                        position="top-center"
+                    )
+            
             if len(self.ratings) == len(self.locations):
-                yield user_state.unlock_achievement("all-area-conqueror")
                 quiz_state = await self.get_state(QuizState)
-                if quiz_state.quiz_finished:
-                    yield user_state.unlock_achievement("nap-legend")
+                if "all-area-conqueror" not in user_state.unlocked_achievements:
+                    old_level_check = user_state.level
+                    user_state.xp += 200
+                    if user_state.level > old_level_check:
+                        yield user_state.level_up_notification(user_state.level)
+                    user_state.unlocked_achievements.add("all-area-conqueror")
+                    achievement = user_state.achievements["all-area-conqueror"]
+                    yield rx.toast.warning(
+                        rx.el.div(
+                            rx.icon(achievement["icon"], class_name="mr-2"),
+                            f"🏆 Achievement Unlocked: {achievement['title']} (+200 XP)",
+                            class_name="flex items-center",
+                        ),
+                        duration=5000,
+                        position="top-center"
+                    )
+                
+                if quiz_state.quiz_finished and "nap-legend" not in user_state.unlocked_achievements:
+                    old_level_check = user_state.level
+                    user_state.xp += 200
+                    if user_state.level > old_level_check:
+                        yield user_state.level_up_notification(user_state.level)
+                    user_state.unlocked_achievements.add("nap-legend")
+                    achievement = user_state.achievements["nap-legend"]
+                    yield rx.toast.warning(
+                        rx.el.div(
+                            rx.icon(achievement["icon"], class_name="mr-2"),
+                            f"🏆 Achievement Unlocked: {achievement['title']} (+200 XP)",
+                            class_name="flex items-center",
+                        ),
+                        duration=5000,
+                        position="top-center"
+                    )
+            
+            # Show mission complete notification
+            stars_display = "⭐" * stars
+            yield rx.toast.success(
+                f"🎯 MISSION COMPLETE\n{location_name}\nRating: {stars_display} ({avg:.1f}/5)\n+{total_xp} XP",
+                duration=4000,
+                position="bottom-right"
+            )
+            
             self.new_rating = {
                 "comfort": 3,
                 "quietness": 3,
@@ -226,10 +415,6 @@ class LocationState(rx.State):
                 "vibe_check": 3,
                 "danger": 3,
             }
-            yield rx.toast(
-                "Rating submitted! Thanks for your contribution to the nap archives.",
-                duration=3000,
-            )
             return
 
     @rx.var

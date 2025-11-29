@@ -28,6 +28,15 @@ def profile_page() -> rx.Component:
 
             # Gamertag Input
             rx.el.div(
+                rx.el.div(
+                    rx.text("LEVEL", class_name="text-[10px] text-gray-500 tracking-widest mb-1"),
+                    rx.el.div(
+                        rx.text(UserState.level, class_name="text-2xl font-bold text-[#ffd700] mr-2"),
+                        rx.text(UserState.level_title, class_name="text-xs text-[#00ff9f] font-bold tracking-wider"),
+                        class_name="flex items-center mb-3"
+                    ),
+                    class_name="mb-3"
+                ),
                 rx.el.input(
                     placeholder="Enter your gamertag",
                     value=UserState.gamertag,
@@ -61,27 +70,35 @@ def profile_page() -> rx.Component:
 
             # Stats Grid
             rx.el.div(
-                # Total Missions
-                rx.el.div(
+                # Total Missions (clickable)
+                rx.el.button(
                     rx.el.div(
-                        rx.icon("map-pin", size=14, class_name="mr-2 text-gray-400"),
-                        rx.text("TOTAL MISSIONS", class_name="text-xs font-bold text-gray-300 tracking-wider"),
-                        class_name="flex items-center mb-3"
+                        rx.el.div(
+                            rx.icon("map-pin", size=14, class_name="mr-2 text-gray-400"),
+                            rx.text("MISSIONS", class_name="text-xs font-bold text-gray-300 tracking-wider"),
+                            class_name="flex items-center mb-3"
+                        ),
+                        rx.text(LocationState.missions_count, class_name="text-3xl font-bold text-[#00ff9f] mb-2"),
+                        rx.text("View history", class_name="text-[10px] text-gray-500 font-mono hover:text-[#00ff9f] transition-colors"),
+                        class_name="flex flex-col"
                     ),
-                    rx.icon("circle-dashed", size=32, class_name="text-[#00ff9f] mb-2"),
-                    rx.text("Top 50% globally", class_name="text-[10px] text-gray-500 font-mono"),
-                    class_name="p-4 border border-[#00ff9f] bg-[#00ff9f]/5 flex flex-col"
+                    on_click=lambda: QuizState.set_page("locations"),
+                    class_name="p-4 border border-[#00ff9f] bg-[#00ff9f]/5 hover:bg-[#00ff9f]/10 transition-colors cursor-pointer w-full text-left"
                 ),
-                # Locations
-                rx.el.div(
+                # Locations (clickable)
+                rx.el.button(
                     rx.el.div(
-                        rx.icon("map", size=14, class_name="mr-2 text-gray-400"),
-                        rx.text("LOCATIONS", class_name="text-xs font-bold text-gray-300 tracking-wider"),
-                        class_name="flex items-center mb-3"
+                        rx.el.div(
+                            rx.icon("map", size=14, class_name="mr-2 text-gray-400"),
+                            rx.text("CHECKED IN", class_name="text-xs font-bold text-gray-300 tracking-wider"),
+                            class_name="flex items-center mb-3"
+                        ),
+                        rx.text(LocationState.explored_count, class_name="text-3xl font-bold text-[#bd00ff] mb-2"),
+                        rx.text("View history", class_name="text-[10px] text-gray-500 font-mono hover:text-[#bd00ff] transition-colors"),
+                        class_name="flex flex-col"
                     ),
-                    rx.icon("circle-dashed", size=32, class_name="text-[#bd00ff] mb-2"),
-                    rx.text("Top 50% explorer", class_name="text-[10px] text-gray-500 font-mono"),
-                    class_name="p-4 border border-[#bd00ff] bg-[#bd00ff]/5 flex flex-col"
+                    on_click=lambda: QuizState.set_page("visited_locations"),
+                    class_name="p-4 border border-[#bd00ff] bg-[#bd00ff]/5 hover:bg-[#bd00ff]/10 transition-colors cursor-pointer w-full text-left"
                 ),
                 # S-Ranks
                 rx.el.div(
@@ -90,20 +107,31 @@ def profile_page() -> rx.Component:
                         rx.text("S-RANKS", class_name="text-xs font-bold text-gray-300 tracking-wider"),
                         class_name="flex items-center mb-3"
                     ),
-                    rx.icon("circle-dashed", size=32, class_name="text-[#ffd700] mb-2"),
-                    rx.text("0% perfect rate", class_name="text-[10px] text-gray-500 font-mono"),
+                    rx.text(LocationState.s_rank_count, class_name="text-3xl font-bold text-[#ffd700] mb-2"),
+                    rx.text(
+                        rx.cond(
+                            LocationState.missions_count > 0,
+                            f"{(LocationState.s_rank_count / LocationState.missions_count * 100):.0f}% perfect rate",
+                            "0% perfect rate"
+                        ),
+                        class_name="text-[10px] text-gray-500 font-mono"
+                    ),
                     class_name="p-4 border border-[#ffd700] bg-[#ffd700]/5 flex flex-col"
                 ),
-                # Achievements
-                rx.el.div(
+                # Achievements (clickable)
+                rx.el.button(
                     rx.el.div(
-                        rx.icon("trophy", size=14, class_name="mr-2 text-gray-400"),
-                        rx.text("ACHIEVEMENTS", class_name="text-xs font-bold text-gray-300 tracking-wider"),
-                        class_name="flex items-center mb-3"
+                        rx.el.div(
+                            rx.icon("trophy", size=14, class_name="mr-2 text-gray-400"),
+                            rx.text("ACHIEVEMENTS", class_name="text-xs font-bold text-gray-300 tracking-wider"),
+                            class_name="flex items-center mb-3"
+                        ),
+                        rx.text(UserState.unlocked_achievements_count, class_name="text-3xl font-bold text-[#ff00ff] mb-2"),
+                        rx.text(f"{UserState.unlocked_achievements_count}/{UserState.total_achievements_count} unlocked", class_name="text-[10px] text-gray-500 font-mono hover:text-[#ff00ff] transition-colors"),
+                        class_name="flex flex-col"
                     ),
-                    rx.icon("circle-dashed", size=32, class_name="text-[#ff00ff] mb-2"),
-                    rx.text("Top 50% hunter", class_name="text-[10px] text-gray-500 font-mono"),
-                    class_name="p-4 border border-[#ff00ff] bg-[#ff00ff]/5 flex flex-col"
+                    on_click=lambda: QuizState.set_page("achievements"),
+                    class_name="p-4 border border-[#ff00ff] bg-[#ff00ff]/5 hover:bg-[#ff00ff]/10 transition-colors cursor-pointer w-full text-left"
                 ),
                 class_name="grid grid-cols-2 gap-4 w-full mb-6"
             ),

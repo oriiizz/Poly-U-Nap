@@ -8,6 +8,7 @@ from app.components.locations_page import locations_page
 from app.components.location_detail_page import location_detail_page
 from app.components.profile_page import profile_page
 from app.components.achievements_page import achievements_page
+from app.components.visited_locations_page import visited_locations_page
 
 
 def index() -> rx.Component:
@@ -24,6 +25,7 @@ def index() -> rx.Component:
                     ("location_detail", location_detail_page()),
                     ("profile", profile_page()),
                     ("achievements", achievements_page()),
+                    ("visited_locations", visited_locations_page()),
                     home_page(),
                 ),
                 class_name="w-full max-w-4xl mx-auto p-4 md:p-8",

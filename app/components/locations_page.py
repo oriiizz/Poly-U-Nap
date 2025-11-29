@@ -68,7 +68,7 @@ def location_card(location: Location) -> rx.Component:
                 rx.cond(
                     is_checked_in,
                     rx.el.div(
-                        rx.icon("check-circle", size=12, class_name="mr-1 text-[#00ff9f]"),
+                        rx.icon("circle-check", size=12, class_name="mr-1 text-[#00ff9f]"),
                         rx.text("CHECKED IN", class_name="text-[10px] text-[#00ff9f] font-bold"),
                         class_name="flex items-center mt-1"
                     ),
