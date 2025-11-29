@@ -1,96 +1,100 @@
-# 💤 Sleep, Scan, Repeat: *The Ultimate Nap Quest*
+**Poly-U-Nap** is a web application designed to help students at PolyU find the best places to take a nap on campus. Whether you''re looking for a quiet corner in the library or a hidden gem in the Innovation Tower, this app has you covered.
 
 > *Scan. Rate. Nap. Repeat.*
 
----
+## 🌟 Features
 
-## 🌙 Overview
+*   **Interactive Campus Map**: Navigate through different buildings (Library, JCIT) and floors to find nap spots.
+*   **Nap Spot Discovery**: Detailed information about each nap spot, including comfort, quietness, and "danger" levels.
+*   **Sleep Personality Quiz**: Find out what kind of sleeper you are and get personalized recommendations.
+*   **Check-in System**: "Check in" to locations to earn XP and level up your profile.
+*   **Rating System**: Rate locations based on your experience.
+*   **Achievements**: Unlock badges and achievements for exploring different spots and leveling up.
+*   **Profile & Stats**: Track your visited locations, favorite spots, and sleeper rank.
 
-Are you a **nap enthusiast**? A **snooze connoisseur**? Or perhaps a **professional horizontal thinker** who’s mastered the art of falling asleep in the weirdest corners of campus?
+## 🛠️ Tech Stack
 
-Welcome to **Sleep, Scan, Repeat** — a **multimedia, Python-powered nap rating system** that turns your resting habits into a game. Think of it as Pokémon Go, but instead of catching monsters, you’re catching Zs.
+*   **Framework**: [Reflex](https://reflex.dev/) (Python)
+*   **Styling**: Tailwind CSS (via Reflex)
+*   **Icons**: Lucide Icons (via Reflex)
 
-Players can **scan QR codes**, **rate nap zones**, take a **Sleep Personality Quiz**, unlock **nap achievements**, and receive **cryptic, randomly generated quotes** to ponder between REM cycles.
+## 🚀 Getting Started
 
----
+### Prerequisites
 
-## 🧠 Concept
+*   Python 3.8 or higher
+*   [Node.js](https://nodejs.org/) (required by Reflex for the frontend build)
 
-We believe sleep deserves the same hype as gaming or caffeine. This project explores the art of resting through **interactive design, code, and comedy** — encouraging players to embrace their inner nap gremlin.
+### Installation
 
----
+1.  **Clone the repository**
+    ```bash
+    git clone <repository-url>
+    cd Poly-U-Nap
+    ```
 
-## ⚙️ Features
+2.  **Create a virtual environment** (Recommended)
+    ```bash
+    python -m venv venv
+    # Windows
+    .\venv\Scripts\activate
+    # macOS/Linux
+    source venv/bin/activate
+    ```
 
-### 🛏️ Nap Rating System
+3.  **Install dependencies**
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-Rate different campus (or public) locations based on comfort, noise, light levels, and nap quality.
-Earn achievements for discovering new zones or becoming a “Legendary Sleeper.”
+### Running the App
 
-### 📱 QR Code Hunt
+1.  **Initialize Reflex** (First time only)
+    ```bash
+    reflex init
+    ```
 
-Each nap spot is paired with a QR code that links to its rating page or unlocks random nap-related secrets.
+2.  **Run the development server**
+    ```bash
+    reflex run
+    ```
 
-### 🧩 Sleep Personality Quiz
+    The app should now be running at `http://localhost:3000`.
 
-An MBTI-style quiz that classifies your snooze type — are you a “Library Dozer,” “Couch Dreamer,” or “Lecture Hall Phantom”?
+## 📂 Project Structure
 
-### 🧠 Random Quotes Generator
+```
+Poly-U-Nap/
+├── app/                    # Main application source code
+│   ├── components/         # UI components (pages, map, header, etc.)
+│   ├── states/             # State management (logic, variables)
+│   ├── app.py              # Main entry point
+│   └── __init__.py
+├── assets/                 # Static assets
+│   ├── map images/         # Campus and floor maps
+│   └── styles.css          # Custom CSS
+├── rxconfig.py             # Reflex configuration
+├── requirements.txt        # Python dependencies
+└── README.md               # Project documentation
+```
 
-Every scan may reveal a mysterious message.
+## 🗺️ How to Edit Map Locations
 
-> “You are both the sleeper and the dream.”
-> “Was that a nap, or a time skip?”
-> “In another life, you were a pillow.”
+To adjust the position of icons on the interactive map:
 
-### 🏆 Achievements
+1.  Open `app/components/interactive_map.py`.
+2.  Locate the `current_floor_locations` function.
+3.  Update the `x` (horizontal) and `y` (vertical) percentage values for the specific location dictionary.
 
-Unlock nap milestones:
+```python
+{
+    "id": "location-id",
+    "x": "50%",  # 0% is Left, 100% is Right
+    "y": "50%"   # 0% is Top, 100% is Bottom
+}
+```
 
-* **“All-Area Conqueror”** – Nap everywhere.
-* **“The 3AM Philosopher”** – Unlock 10 cryptic quotes.
-* **“Power Napper”** – Five 10-minute naps in one day.
+## 📄 License
 
----
-
-## 🎨 Design Goals
-
-* **Fun meets Functionality:** Sleep data meets interactive storytelling.
-* **Accessible Play:** Anyone with a phone and the desire to nap can join.
-* **Multimedia Experience:** Audio snippets, visuals, and environmental recordings create immersive “nap lore.”
-* **Beautiful Chaos:** It’s art, it’s code, it’s a sleep experiment gone right.
-
----
-
-## 🧰 Built With
-
-* **Python** — handles quiz logic, data storage, and QR generation.
-* **Flask / Django (optional)** — backend for ratings and leaderboard.
-* **Pillow / OpenCV** — for fun image-based achievements.
-* **Multimedia tools** — video, audio, and graphic assets for the immersive side of napping.
-
----
-
-## 💡 Future Ideas
-
-* Global leaderboard for “Elite Nappers.”
-* AR overlay to visualize nearby nap zones.
-* Sleep style analytics dashboard (because data is sexy).
-* Optional sleep soundtrack playlist integration.
-
----
-
-## 😴 Questions to Ponder
-
-* Hard mattress or soft cloud?
-* Do you use blankets, or do you simply accept the cold?
-* Deep sleep or light snooze?
-* Ideal nap temperature?
-* What percent of people nap the same way you do?
-
----
-
-## 💤 Final Words
-
-This project celebrates **the power of rest** — equal parts tech, art, and nap-fueled philosophy.
-So grab your phone, scan a code, and drift off knowing your nap *actually matters* this time.
+This project is for educational and creative purposes.
+'
