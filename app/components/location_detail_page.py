@@ -78,9 +78,38 @@ def location_detail_page() -> rx.Component:
                                 class_name="text-xl md:text-2xl text-[#00ff9f] font-bold tracking-widest uppercase text-shadow-neon-green"
                             ),
                             # Physical Location (smaller, gray)
-                            rx.el.p(
-                                "\ud83d\udccd ", LocationState.selected_location["location"],
-                                class_name="text-xs text-gray-500 mt-1 font-mono"
+                            rx.el.div(
+                                rx.el.p(
+                                    "\ud83d\udccd ", LocationState.selected_location["location"],
+                                    class_name="text-xs text-gray-500 mt-1 font-mono cursor-help hover:text-[#00ff9f] transition-colors",
+                                    on_mouse_enter=LocationState.set_hovering_location_title(True),
+                                    on_mouse_leave=LocationState.set_hovering_location_title(False),
+                                ),
+                                # Hover Map Popup
+                                rx.cond(
+                                    LocationState.is_hovering_location_title,
+                                    rx.el.div(
+                                        rx.el.div(
+                                            rx.image(
+                                                src=LocationState.selected_location_map_image,
+                                                class_name="w-full h-full object-cover opacity-50"
+                                            ),
+                                            # Pin
+                                            rx.el.div(
+                                                rx.icon("map-pin", size=24, class_name="text-[#00ff9f] animate-bounce"),
+                                                class_name="absolute transform -translate-x-1/2 -translate-y-full",
+                                                style={
+                                                    "left": LocationState.selected_location_coords["x"],
+                                                    "top": LocationState.selected_location_coords["y"]
+                                                }
+                                            ),
+                                            class_name="relative w-64 h-48 bg-[#0a0a0f] border-2 border-[#00ff9f] overflow-hidden rounded-lg shadow-2xl"
+                                        ),
+                                        class_name="absolute z-50 mt-2 transform -translate-x-1/4 pointer-events-none"
+                                    ),
+                                    rx.el.div()
+                                ),
+                                class_name="relative"
                             ),
                             class_name="flex flex-col"
                         ),

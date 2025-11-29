@@ -8,23 +8,24 @@ def unlocked_location_tag(spot_id: str) -> rx.Component:
     # We need to find the location name from the ID
     location_name = rx.match(
         spot_id,
-        ("cdm-sofa-paradise", "Study room on the G floor of the library"),
-        ("ldp-lecture-phantom", "The corridor of bookshelves on the G floor of the library"),
-        ("cdm-ergonomic-island", "Sofa on the G floor of the library"),
-        ("pms-urban-sleeper", "Outdoor wooden chair"),
-        ("pms-umbrella-universe", "Outdoor dining chair"),
-        ("pms-stone-zen", "Outdoor stone chair"),
-        ("pnp-milk-tea-dreams", "JCIT Milk Tea Shop"),
-        ("ldp-stealth-stairs", "JCIT Stairwell"),
-        ("cdm-curtain-instance", "JCIT Study Room Partition Area"),
-        ("cdm-modular-dreams", "JCIT Study Room Sofa"),
+        ("cloud-nine-credit", "Cloud Nine Credit Charge"),
+        ("the-spynap-alley", "The Spy-Nap Alley"),
+        ("the-public-isolation", "The Public Isolation Island"),
+        ("the-urban-zen", "The Urban Zen Bench"),
+        ("the-shade-throne", "The Shade Throne"),
+        ("the-stonecold-zen", "The Stone-Cold Zen Zone"),
+        ("the-bobafueled-snooze", "The Boba-Fueled Snooze Booth"),
+        ("the-stairwell-stealth", "The Stairwell Stealth Suite"),
+        ("the-curtaincall-nap", "The Curtain-Call Nap Studio"),
+        ("the-modular-dream", "The Modular Dream Fort"),
         "Unknown Location"
     )
     
     return rx.el.div(
         rx.icon("map-pin", size=12, class_name="mr-1"),
         rx.text(location_name, class_name="text-[10px] font-bold"),
-        class_name="flex items-center px-2 py-1 border border-[#bd00ff] text-[#bd00ff] bg-[#bd00ff]/10 mr-2 mb-2"
+        on_click=LocationState.select_location(spot_id),
+        class_name="flex items-center px-2 py-1 border border-[#bd00ff] text-[#bd00ff] bg-[#bd00ff]/10 mr-2 mb-2 cursor-pointer hover:bg-[#bd00ff]/30 transition-colors"
     )
 
 
@@ -81,7 +82,7 @@ def results_page() -> rx.Component:
                 ),
                 
                 rx.el.div(
-                    rx.text(">> UNLOCKED LOCATIONS:", class_name="text-xs text-[#00ff9f] font-bold mb-3 tracking-wider"),
+                    rx.text(">> BEST MATCH / RECOMMENDED LOCATIONS:", class_name="text-xs text-[#00ff9f] font-bold mb-3 tracking-wider"),
                     rx.el.div(
                         rx.foreach(
                             QuizState.personality_details["spots"],

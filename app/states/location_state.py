@@ -151,6 +151,53 @@ class LocationState(rx.State):
         "danger": 3,
     }
 
+    is_hovering_location_title: bool = False
+
+    @rx.event
+    def set_hovering_location_title(self, hover: bool):
+        self.is_hovering_location_title = hover
+
+    @rx.var
+    def selected_location_map_image(self) -> str:
+        if not self.selected_location_id:
+            return ""
+        
+        # Hardcoded mapping to avoid circular imports with MapState
+        # Library G
+        if self.selected_location_id in ["cloud-nine-credit", "the-spynap-alley", "the-public-isolation"]:
+            return "/map images/Pao Yue-kong Library G Floor.png"
+        # JCIT P
+        elif self.selected_location_id in ["the-bobafueled-snooze"]:
+            return "/map images/Jockey Club Innovation Tower P.png"
+        # JCIT 11
+        elif self.selected_location_id in ["the-stairwell-stealth", "the-curtaincall-nap", "the-modular-dream"]:
+            return "/map images/Jockey Club Innovation Tower 11F.png"
+        # Outdoor
+        elif self.selected_location_id in ["the-urban-zen", "the-shade-throne", "the-stonecold-zen"]:
+            return "/map images/POLYU MAP.png"
+        
+        return ""
+
+    @rx.var
+    def selected_location_coords(self) -> dict[str, str]:
+        if not self.selected_location_id:
+            return {"x": "0%", "y": "0%"}
+            
+        # Hardcoded coordinates matching interactive_map.py
+        coords = {
+            "cloud-nine-credit": {"x": "25%", "y": "35%"},
+            "the-spynap-alley": {"x": "45%", "y": "28%"},
+            "the-public-isolation": {"x": "60%", "y": "45%"},
+            "the-urban-zen": {"x": "60%", "y": "59%"},
+            "the-shade-throne": {"x": "58%", "y": "51%"},
+            "the-stonecold-zen": {"x": "57%", "y": "62%"},
+            "the-bobafueled-snooze": {"x": "72%", "y": "28%"},
+            "the-stairwell-stealth": {"x": "48%", "y": "35%"},
+            "the-curtaincall-nap": {"x": "60%", "y": "45%"},
+            "the-modular-dream": {"x": "53%", "y": "60%"},
+        }
+        return coords.get(self.selected_location_id, {"x": "50%", "y": "50%"})
+
     @rx.event
     async def check_in_location(self, location_id: str):
         from app.states.user_state import UserState

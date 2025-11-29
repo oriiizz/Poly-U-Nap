@@ -1,5 +1,6 @@
 import reflex as rx
 from app.states.location_state import LocationState, Location
+from app.states.quiz_state import QuizState
 from app.components.sketchfab import sketchfab_model
 from app.components.interactive_map import interactive_campus_map
 
@@ -41,6 +42,7 @@ def location_card(location: Location) -> rx.Component:
     avg_ratings = LocationState.average_ratings.get(location["id"], {})
     overall_rating = avg_ratings.get("overall", 0.0)
     is_checked_in = LocationState.checked_in_locations.contains(location["id"])
+    is_recommended = QuizState.personality_details["spots"].contains(location["id"])
     
     rarity_color = rx.match(
         location["rarity"],
@@ -52,7 +54,31 @@ def location_card(location: Location) -> rx.Component:
         "gray-400"
     )
 
+    # Use a dynamic border color based on recommendation
+    # We define the styles as dictionaries and switch between them
+    style_recommended = {
+        "borderColor": "#ffd700",
+        "backgroundColor": "rgba(255, 215, 0, 0.05)",
+        "boxShadow": "0 0 15px rgba(255, 215, 0, 0.1)",
+    }
+    style_normal = {
+        "borderColor": "#00ff9f30",
+        "backgroundColor": "#1a1a2e",
+        "boxShadow": "none",
+    }
+
     return rx.el.div(
+        # Recommended Badge
+        rx.cond(
+            is_recommended,
+            rx.el.div(
+                rx.icon("sparkles", size=12, class_name="mr-1 text-black"),
+                rx.text("BEST MATCH FOR YOU", class_name="text-[10px] text-black font-bold tracking-widest"),
+                class_name="absolute -top-3 left-4 bg-[#ffd700] px-2 py-1 flex items-center shadow-lg z-10"
+            ),
+            rx.el.div()
+        ),
+
         # Header with Icon and Names
         rx.el.div(
             rx.icon(
@@ -114,7 +140,8 @@ def location_card(location: Location) -> rx.Component:
             class_name="mt-auto w-full"
         ),
         
-        class_name="w-full p-4 md:p-6 bg-[#1a1a2e] border border-[#00ff9f]/30 flex flex-col h-full hover:border-[#00ff9f] transition-all duration-300",
+        class_name="w-full p-4 md:p-6 border flex flex-col h-full transition-all duration-300 relative mt-2",
+        style=rx.cond(is_recommended, style_recommended, style_normal)
     )
 
 
