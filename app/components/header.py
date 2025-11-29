@@ -23,7 +23,7 @@ def header() -> rx.Component:
                     class_name="h-6 w-6 md:h-8 md:w-8 text-[#00ff9f] mr-2 md:mr-4",
                 ),
                 rx.el.h1(
-                    "Sleep, Scan, Repeat",
+                    "Poly U Nap",
                     class_name="text-base md:text-2xl font-bold text-shadow-neon text-[#00ff9f]",
                 ),
                 class_name="flex items-center",

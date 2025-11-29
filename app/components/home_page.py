@@ -13,9 +13,7 @@ def home_page() -> rx.Component:
                 class_name="flex justify-center gap-4 mb-4",
             ),
             rx.el.h1(
-                "SLEEP, SCAN,",
-                rx.el.br(),
-                "REPEAT",
+                "POLY U NAP",
                 class_name="text-4xl md:text-6xl text-[#00ff9f] text-center font-bold mb-4 text-shadow-neon leading-tight",
             ),
             rx.el.p(
