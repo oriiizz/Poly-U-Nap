@@ -2,6 +2,9 @@
 
 > *Scan. Rate. Nap. Repeat.*
 
+## 🔗 Live Demo
+[**Click here to visit the live app!**](https://poly-u-nap.reflex.run)
+
 ## 🌟 Features
 
 *   **Interactive Campus Map**: Navigate through different buildings (Library, JCIT) and floors to find nap spots.
