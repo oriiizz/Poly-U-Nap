@@ -11,16 +11,16 @@ class MapState(rx.State):
     
     # Building to floor mapping
     building_floors: dict[str, list[str]] = {
-        "library": ["G", "1"],
+        "library": ["G"],
         "jcit": ["11", "P"]
     }
     
     # Location to building/floor mapping
     location_map: dict[str, dict[str, str]] = {
-        "cloud-nine-credit": {"building": "library", "floor": "G", "icon": "far", "x": "25%", "y": "35%"},
-        "the-spynap-alley": {"building": "library", "floor": "G", "icon": "middle", "x": "45%", "y": "28%"},
-        "the-public-isolation": {"building": "library", "floor": "G", "icon": "close", "x": "60%", "y": "45%"},
-        "the-urban-zen": {"building": "outdoor", "floor": "outdoor", "icon": "middle", "x": "45%", "y": "55%"},
+        "cloud-nine-credit": {"building": "library", "floor": "G", "icon": "far", "x": "60%", "y": "9%"},
+        "the-spynap-alley": {"building": "library", "floor": "G", "icon": "middle", "x": "7%", "y": "9%"},
+        "the-public-isolation": {"building": "library", "floor": "G", "icon": "close", "x": "43%", "y": "65%"},
+        "the-urban-zen": {"building": "outdoor", "floor": "outdoor", "icon": "middle", "x": "60%", "y": "59%"},
         "the-shade-throne": {"building": "outdoor", "floor": "outdoor", "icon": "close", "x": "50%", "y": "48%"},
         "the-stonecold-zen": {"building": "outdoor", "floor": "outdoor", "icon": "far", "x": "40%", "y": "60%"},
         "the-bobafueled-snooze": {"building": "jcit", "floor": "P", "icon": "close", "x": "72%", "y": "28%"},
@@ -88,39 +88,39 @@ class MapState(rx.State):
                 "location": "Study room on the G floor of the library",
                 "name": "Cloud Nine Credit Charge",
                 "icon_type": "far",
-                "x": "25%",
-                "y": "35%"
+                "x": "30%",
+                "y": "18%"
             },
             {
                 "id": "the-spynap-alley",
                 "location": "The corridor of bookshelves on the G floor of the library",
                 "name": "The Spy-Nap Alley",
                 "icon_type": "middle",
-                "x": "45%",
-                "y": "28%"
+                "x": "7%",
+                "y": "18%"
             },
             {
                 "id": "the-public-isolation",
                 "location": "Sofa on the G floor of the library",
                 "name": "The Public Isolation Island",
                 "icon_type": "close",
-                "x": "60%",
-                "y": "45%"
+                "x": "42%",
+                "y": "64%"
             },
             {
                 "id": "the-bobafueled-snooze",
                 "location": "JCIT Milk Tea Shop",
                 "name": "The Boba-Fueled Snooze Booth",
                 "icon_type": "close",
-                "x": "72%",
-                "y": "28%"
+                "x": "68%",
+                "y": "33%"
             },
             {
                 "id": "the-stairwell-stealth",
                 "location": "JCIT Stairwell",
                 "name": "The Stairwell Stealth Suite",
                 "icon_type": "far",
-                "x": "48%",
+                "x": "43%",
                 "y": "35%"
             },
             {
@@ -128,16 +128,16 @@ class MapState(rx.State):
                 "location": "JCIT Study Room Partition Area",
                 "name": "The Curtain-Call Nap Studio",
                 "icon_type": "middle",
-                "x": "60%",
-                "y": "45%"
+                "x": "63%",
+                "y": "55%"
             },
             {
                 "id": "the-modular-dream",
                 "location": "JCIT Study Room Sofa",
                 "name": "The Modular Dream Fort",
                 "icon_type": "middle",
-                "x": "53%",
-                "y": "60%"
+                "x": "54%",
+                "y": "75%"
             },
         ]
         
@@ -267,12 +267,13 @@ def floor_location_icon(location: rx.Var[dict]) -> rx.Component:
         on_mouse_enter=MapState.set_hovered_icon(location.id),
         on_mouse_leave=MapState.set_hovered_icon(""),
         on_click=MapState.select_location_and_close(location.id),
-        class_name="absolute cursor-pointer z-40",
+        class_name="absolute cursor-pointer",
         # Position based on location data
         style={
             "top": location.y,
             "left": location.x,
-            "transform": "translate(-50%, -100%)"  # Center the icon horizontally and position bottom at coordinate
+            "transform": "translate(-50%, -100%)",  # Center the icon horizontally and position bottom at coordinate
+            "zIndex": rx.cond(MapState.hovered_icon == location.id, "100", "40"),
         }
     )
 
@@ -326,7 +327,8 @@ def outdoor_location_icon(location_id: str, location_name: str, x: str, y: str, 
         style={
             "top": y,
             "left": x,
-            "transform": "translate(-50%, -100%)"
+            "transform": "translate(-50%, -100%)",
+            "zIndex": rx.cond(MapState.hovered_icon == location_id, "100", "30"),
         }
     )
 
@@ -379,7 +381,8 @@ def building_icon_on_main_map(building: str, x: str, y: str) -> rx.Component:
         class_name="absolute cursor-pointer",
         style={
             "top": y,
-            "left": x
+            "left": x,
+            "zIndex": rx.cond(MapState.hovered_icon == building, "100", "30"),
         }
     )
 
@@ -456,7 +459,7 @@ def interactive_campus_map() -> rx.Component:
                 
                 # Floor navigation arrows (only show when building selected and has multiple floors)
                 rx.cond(
-                    MapState.selected_building != "",
+                    (MapState.can_go_up) | (MapState.can_go_down),
                     rx.el.div(
                         # Up arrow
                         rx.cond(

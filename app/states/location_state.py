@@ -185,9 +185,9 @@ class LocationState(rx.State):
             
         # Hardcoded coordinates matching interactive_map.py
         coords = {
-            "cloud-nine-credit": {"x": "25%", "y": "35%"},
-            "the-spynap-alley": {"x": "45%", "y": "28%"},
-            "the-public-isolation": {"x": "60%", "y": "45%"},
+            "cloud-nine-credit": {"x": "30%", "y": "9%"},
+            "the-spynap-alley": {"x": "7%", "y": "9%"},
+            "the-public-isolation": {"x": "43%", "y": "65%"},
             "the-urban-zen": {"x": "60%", "y": "59%"},
             "the-shade-throne": {"x": "58%", "y": "51%"},
             "the-stonecold-zen": {"x": "57%", "y": "62%"},
